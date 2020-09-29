@@ -10,7 +10,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::all();
+        $courses = Course::paginate(3);
 
         return CourseResource::collection($courses);
     }
@@ -18,6 +18,7 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $course = Course::create($request->all());
+
         return new CourseResource($course);
     }
 

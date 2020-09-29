@@ -36,6 +36,8 @@
             </tr>
             </tbody>
         </table>
+
+        <pagination :data="courses" @pagination-change-page="getPagination"></pagination>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog">
@@ -81,12 +83,29 @@
                 </div>
             </div>
         </div>
-
+        
+        Caorusel
+<VueSlickCarousel ref="slick" :arrows="true" :dots="true">
+<!-- <div> -->
+     <a href="http://placehold.it/420x220">
+        <img src="http://placehold.it/420x220" alt="">
+    </a>
+  <a href="http://placehold.it/420x220">
+        <img src="http://placehold.it/420x220" alt="">
+    </a>
+    <!-- </div> -->
+    </VueSlickCarousel>
     </div>
 </template>
 
 <script>
+  import VueSlickCarousel from 'vue-slick-carousel'
+  import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+  import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 export default {
+    name: 'CourseComponent',
+    components: { VueSlickCarousel },
+    
     data() {
         return {
             form: new Form({
@@ -99,11 +118,28 @@ export default {
                 lesson_count: '',
             }),
             categories: [],
-            courses: [],
-            edit: false
+            courses: {},
+            edit: false,
+             slickOptions: {
+                 slidesToShow: 3,
+                 infinite: true,
+                        accessibility: true,
+                        adaptiveHeight: false,
+                        arrows: true,
+                        dots: true,
+                        draggable: true,
+                        edgeFriction: 0.30,
+                        swipe: true
+                    },
         }
-    },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            },
     methods: {
+        getPagination(page = 1) {
+            axios.get('api/courses?page=' + page)
+                .then(response => {
+                    this.courses=response.data                                                                                                                                                                                                                                                                                               ;
+                });
+        },
         getCategories() {
             axios.get('/api/categories').then(res => {
                 this.categories = res.data
@@ -139,14 +175,13 @@ export default {
                 })
                 .catch(err => console.log(err));
         },
-        deleteCourse(course) {
-            if (confirm('Are you sure?')) {
-                axios.delete(`api/courses/${course}`)
+        deleteCourse(id) {
+            axios.delete(`api/courses/${id}`)
                     .then((response) => {
                         this.getCourses();
                     })
                     .catch(err => console.log(err))
-            }
+
         },
         openAddModal() {
             this.edit = false;
@@ -154,11 +189,36 @@ export default {
             this.category_id = '';
             $('#exampleModal').modal('show');
             this.getCategories();
+        },
+         next() {
+            this.$refs.slick.next();
+        },
+
+        prev() {
+            this.$refs.slick.prev();
+        },
+
+        reInit() {
+            // Helpful if you have to deal with v-for to update dynamic lists
+            this.$nextTick(() => {
+                this.$refs.slick.reSlick();
+            });
+            },
+            beforeUpdate() {
+        if (this.$refs.slick) {
+            this.$refs.slick.destroy();
         }
     },
-    mounted() {
-        console.log(this.form)
-        this.getCourses();
+    updated() {
+        this.$nextTick(function () {
+            if (this.$refs.slick) {
+                this.$refs.slick.create(this.slickOptions);
+            }
+        });
+    },
+    },
+    created() {
+        this.getPagination();
     },
 }
 </script>
