@@ -15,7 +15,7 @@
                     @endif
 
                     <div>
-                        <course-component></course-component>
+                      
                     </div>
                 </div>
             </div>

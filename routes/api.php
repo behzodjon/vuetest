@@ -18,8 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('categories','CategoryController@index');
-Route::get('/courses','CourseController@index');
-Route::post('/course', 'CourseController@store');
+Route::get('courses','CourseController@index');
+Route::post('course', 'CourseController@store');
 Route::put('courses/{course}', 'CourseController@update');
 Route::delete('courses/{course}', 'CourseController@destroy');
 

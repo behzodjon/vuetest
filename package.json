@@ -27,10 +27,10 @@
     },
     "dependencies": {
         "bootstrap": "^4.5.2",
-        "laravel-vue-pagination": "^2.3.1",
         "vform": "^1.0.1",
         "vue": "^2.6.12",
         "vue-axios": "^2.1.5",
+        "vue-router": "^3.4.5",
         "vue-slick": "^1.1.15",
         "vue-slick-carousel": "^1.0.6"
     }

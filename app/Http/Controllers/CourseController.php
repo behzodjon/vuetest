@@ -10,29 +10,29 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::paginate(3);
+        $courses = Course::orderByDesc('created_at')->get();
 
         return CourseResource::collection($courses);
     }
 
     public function store(Request $request)
     {
-        $course = Course::create($request->all());
+        Course::create($request->all());
 
-        return new CourseResource($course);
+        return $this->index();
     }
 
     public function update(Request $request, Course $course)
     {
         $course->update($request->all());
 
-        return new CourseResource($course);
+        return $this->index();
     }
 
     public function destroy(Course $course)
     {
         $course->delete();
 
-        return new CourseResource($course);
+        return $this->index();
     }
 }
