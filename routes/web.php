@@ -13,16 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//     return view('home');
-// })->name('dashboard');
-
-Auth::routes();
-
-// Route::view('home','home');
+Route::view('/', 'home');
 
 

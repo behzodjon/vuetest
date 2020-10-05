@@ -1952,8 +1952,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
- // optional style for arrows & dots
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1964,6 +1970,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      selectedCategoryId: '',
       settings: {
         dots: true,
         centerMode: true,
@@ -1977,7 +1984,28 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  methods: {//
+  methods: {
+    all: function all() {
+      this.selectedCategoryId = '';
+    },
+    selectCategory: function selectCategory(id) {
+      this.settings.slidesToScroll = 1;
+      this.settings.slidesToShow = 1;
+      this.selectedCategoryId = id;
+    }
+  },
+  computed: {
+    filteredCourses: function filteredCourses() {
+      var _this = this;
+
+      if (this.selectedCategoryId === "") {
+        return this.courses;
+      } else if (this.selectedCategoryId != "") {
+        return this.courses.filter(function (course) {
+          return course.category_id == _this.selectedCategoryId;
+        });
+      }
+    }
   }
 });
 
@@ -39529,14 +39557,20 @@ var render = function() {
         [
           _c("button", {
             staticClass: "btn btn-success",
-            domProps: { textContent: _vm._s("All") }
+            domProps: { textContent: _vm._s("All") },
+            on: { click: _vm.all }
           }),
           _vm._v(" "),
           _vm._l(_vm.categories, function(category) {
             return _c("div", { key: category.id }, [
               _c("button", {
                 staticClass: "btn btn-success",
-                domProps: { textContent: _vm._s(category.name) }
+                domProps: { textContent: _vm._s(category.name) },
+                on: {
+                  click: function($event) {
+                    return _vm.selectCategory(category.id)
+                  }
+                }
               })
             ])
           })
@@ -39546,17 +39580,23 @@ var render = function() {
       _vm._v(" "),
       _c("br"),
       _vm._v(" "),
-      _vm.courses.length > 0
+      _vm.filteredCourses.length > 0
         ? _c(
             "VueSlickCarousel",
             _vm._b({}, "VueSlickCarousel", _vm.settings, false),
-            _vm._l(_vm.courses, function(course) {
+            _vm._l(_vm.filteredCourses, function(course) {
               return _c("div", { key: course.id }, [
-                _c("div", [_c("h3", [_vm._v(_vm._s(course.name))])])
+                _c("div", [
+                  _c("h3", { domProps: { textContent: _vm._s(course.name) } })
+                ])
               ])
             }),
             0
           )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.filteredCourses.length == 0
+        ? _c("div", [_c("h3", [_vm._v("No,course available")])])
         : _vm._e()
     ],
     1

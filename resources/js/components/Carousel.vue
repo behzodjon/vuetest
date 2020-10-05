@@ -2,25 +2,31 @@
   <div>
     <h2>Slides</h2>
     <div class="d-flex">
-      <button class="btn btn-success" v-text="'All'" />
+      <button @click="all" class="btn btn-success" v-text="'All'" />
       <div v-for="category in categories" :key="category.id">
-        <button class="btn btn-success" v-text="category.name" />
+        <button
+          @click="selectCategory(category.id)"
+          class="btn btn-success"
+          v-text="category.name"
+        />
       </div>
     </div>
     <br />
-    <VueSlickCarousel v-if="courses.length > 0" v-bind="settings">
-      <div v-for="course in courses" :key="course.id">
+    <VueSlickCarousel v-if="filteredCourses.length > 0" v-bind="settings">
+      <div v-for="course in filteredCourses" :key="course.id">
         <div>
-          <h3>{{ course.name }}</h3>
-        </div>
+          <h3  v-text="course.name"/>
+        </div> 
       </div>
     </VueSlickCarousel>
+    <div v-if="filteredCourses.length ==0">
+      <h3>No,course available</h3>
+    </div>
   </div>
 </template>
 <script>
 import VueSlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
-// optional style for arrows & dots
 import "vue-slick-carousel/dist/vue-slick-carousel-theme.css";
 
 export default {
@@ -29,6 +35,7 @@ export default {
   components: { VueSlickCarousel },
   data() {
     return {
+      selectedCategoryId: '',
       settings: {
         dots: true,
         centerMode: true,
@@ -43,7 +50,25 @@ export default {
     };
   },
   methods: {
-    //
+    all() {
+      this.selectedCategoryId='';
+    },
+    selectCategory(id) {
+      this.settings.slidesToScroll = 1;
+      this.settings.slidesToShow = 1;
+      this.selectedCategoryId = id;
+    },
+  },
+  computed: {
+    filteredCourses() {
+      if (this.selectedCategoryId === "") {
+        return this.courses;
+      } else if (this.selectedCategoryId != "") {
+        return this.courses.filter(
+          (course) => course.category_id == this.selectedCategoryId
+        );
+      }
+    },
   },
 };
 </script>
